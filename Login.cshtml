@@ -1,0 +1,461 @@
+﻿@{
+    Layout = "~/Views/Shared/_Login.cshtml";
+    ViewBag.Title = GeralResource.RecRes(8);
+}
+@using System.Web.Optimization;
+@using padvMVC.Models
+
+@if (ViewBag.ErrorPage != null)
+{
+    <label> @ViewBag.ErrorPage </label>
+    return;
+}
+
+<div class="row m-0">
+    <div class="col-lg-9 p-0 d-none d-lg-block">
+        <section class="registration-content p-5 bg_section_login">
+            <div class="registration-content__bottom">
+                <h1 class="title-xlg">@Html.Raw(GeralResource.RecRes(507))</h1>
+                <div class="registration-content__footer">
+                    <div class="row align-items-center">
+                        <div class="col-6">
+                            <p class="registration-content__copy-text">
+                                @Html.Raw(GeralResource.RecRes(492))
+                            </p>
+                        </div>
+                        <div class="col-6">
+                            <div class="navbar-custom p-0">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Legals","Home")">@Html.Raw(GeralResource.RecRes(199))</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Contact","Home")">@Html.Raw(GeralResource.RecRes(1016))</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="col-lg-3 p-0">
+        <div id="divLogin">
+            <aside class="b-registration-aside px-3 py-4 px-lg-4 py-lg-5">
+                <form id="formLogin">
+                    <a class="b-logo" href="#">
+                        <img class="b-logo__img" src="~/img/logo_lg.png" alt="" role="presentation" />
+                    </a>
+                    <div class="row">
+                        <div class="col-3">
+                            <a href="#" class="lang_link" value="4" lang="pt"> <img src="~/img/pt.png" width="30" /> </a>
+                        </div>
+                        <div class="col-3">
+                            <a href="#" class="lang_link" value="3" lang="es"> <img src="~/img/es.png" width="30" /> </a>
+                        </div>
+                        <div class="col-3">
+                            <a href="#" class="lang_link" value="2" lang="fr">
+                                <img lang="fr" src="~/img/fr.png" width="30" />
+                            </a>
+                        </div>
+                        <div class="col-3">
+                            <a href="#" class="lang_link" value="1" lang="en">
+                                <img lang="en" src="~/img/UK.png" width="30" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="b-registration-aside__row">
+                        <p class="mb-0 font-lg font-weight-bold">@Html.Raw(GeralResource.RecRes(249))</p><span class="font-md-l">@Html.Raw(GeralResource.RecRes(513))</span>
+                    </div>
+                    <input name="email" id="email_login" class="form-control-lg mb-3" type="text" placeholder="@Html.Raw(GeralResource.RecRes(19))">
+                    <input name="senha" id="senha_login" class="form-control-lg mb-2" type="password" placeholder="@Html.Raw(GeralResource.RecRes(22))">
+                    <p class="font-md text-right mb-3">
+                        <a href="#" onclick="ShowRecoverPass()">
+                            @Html.Raw(GeralResource.RecRes(512))
+                        </a>
+                    </p>
+                    <p class="font-md text-right mb-3">
+                        <label id="lblmsg" style="display:none; color:red;"> </label>
+                    </p>
+                    <button type="button" id="btnLogin" onclick="Login()" class="btn btn-info btn-xlg round btn-block mb-3">@Html.Raw(GeralResource.RecRes(8))</button>
+
+                    <p style="" class="font-md">
+                        @Html.Raw(GeralResource.RecRes(511))<a href="#" onclick="ShowRegister()">@Html.Raw(GeralResource.RecRes(45))</a>
+                    </p>
+                </form>
+            </aside>
+        </div>
+        <div id="divRegister" style="display:none">
+            <aside class="b-registration-aside px-3 py-4 px-lg-4 py-lg-5" />
+            <a class="b-logo" href="#">
+                <img class="b-logo__img" src="~/img/logo_lg.png" alt="" role="presentation" />
+            </a>
+            <div class="b-registration-aside__row">
+                <p id="reg_sub_title" class="mb-0 font-lg font-weight-bold titles_person_login"></p><span class="font-md-l">
+                    @Html.Raw(GeralResource.RecRes(509))<a href="#" onclick="BackToLogin()">@Html.Raw(GeralResource.RecRes(8))</a>
+                </span>
+                <form id="formRegister">
+                    <div class="row">
+                        <label id="msg_reg_exib" class="msg_person_login"></label>
+                    </div>
+                    <div id="contentform">
+                        @Html.Partial("Form", new Exist_UsersDto())
+                    </div>
+                </form>
+            </div>
+            <button type="button" id="btnRegister" onclick="Register()" class="btn btn-info btn-xlg round btn-block mb-3">@Html.Raw(GeralResource.RecRes(45))</button>
+        </div>
+        <div id="divAlterPass" style="display:none">
+            <aside class="b-registration-aside px-3 py-4 px-lg-4 py-lg-5" />
+            <a class="b-logo" href="#">
+                <img class="b-logo__img" src="~/img/logo_lg.png" alt="" role="presentation" />
+            </a>
+            <div class="b-registration-aside__row">
+                <p class="mb-0 font-lg font-weight-bold">@Html.Raw(GeralResource.RecRes(510))</p><span class="font-md-l">
+                    @Html.Raw(GeralResource.RecRes(509))<a href="#" onclick="BackToLogin()">@Html.Raw(GeralResource.RecRes(8))</a>
+                </span>
+                <form id="FormAlter">
+                    <div id="alterform">
+                        @Html.Partial("FormPass", new Exist_UsersDto())
+                    </div>
+                </form>
+            </div>
+            <button type="button" id="btnAlter" onclick="AlterarSenha()" class="btn btn-info btn-xlg round btn-block mb-3">@Html.Raw(GeralResource.RecRes(627))</button>
+        </div>
+        <div id="divRecoverPass" style="display:none">
+            <aside class="b-registration-aside px-3 py-4 px-lg-4 py-lg-5">
+                <form if="formRecover">
+                    <a class="b-logo" href="#">
+                        <img class="b-logo__img" src="~/img/logo_lg.png" alt="" role="presentation" />
+                    </a>
+                    <div class="b-registration-aside__row">
+                        <p class="mb-0 font-lg font-weight-bold">@Html.Raw(GeralResource.RecRes(175))</p>
+                        <a class="font-md-l"
+                           href="#" onclick="BackToLogin()">@Html.Raw(GeralResource.RecRes(508))</a>
+                    </div>
+                    <input class="form-control-lg mb-3" id="txt_email_recover" type="text" placeholder="@Html.Raw(GeralResource.RecRes(483))">
+                    <button type="button" id="btnRecover" onclick="recoverPass()" class="btn btn-info btn-xlg round btn-block mb-3">@Html.Raw(GeralResource.RecRes(47))</button>
+                    <div id="mensagemRec">
+                    </div>
+                </form>
+            </aside>
+        </div>
+    </div>
+    @Html.Partial("~/Views/Shared/_ModalMsg.cshtml")
+</div>
+@{var usuario = (Exist_UsersDto)ViewBag.usuario; }
+
+
+@section scripts
+    {
+    <script>
+
+        $("#look_password_register").change(function () {
+
+            var type = $("#user_password").attr('type');
+            if (type == "password") {
+                $("#user_password").attr('type', 'text');
+                $("#user_password_confirm").attr('type', 'text');
+            } else {
+                $("#user_password").attr('type', 'password');
+                $("#user_password_confirm").attr('type', 'password');
+            }
+
+        });
+
+        $(".lang_link").click(function () {
+            var lang = $(this).attr('lang');
+            var lang_id = $(this).val();
+            AlterarIdioma(lang, lang_id);
+        });
+
+        function AlterarIdioma(lang, lang_id) {
+
+            $.ajax({
+                type: 'POST',
+                url: "/Login/AlterarIdioma",
+                data: { language: lang, lang_id: lang_id },
+                success: function (data) {
+                    if (data.status == "success") {
+                        location.reload();
+
+                    } else if (data.status == "error") {
+
+                    }
+
+                }, beforeSend: function () {
+
+                }, complete: function () {
+                }
+            });
+
+        }
+
+
+        window.load = PageLoad();
+
+        function PageLoad() {
+
+            $("#email_login").focus();
+        }
+
+        function ShowFields() {
+            $("#div_senha").show();
+            $("#div_conf_senha").show();
+            $("#div_exib").show();
+        }
+
+        function ShowRegister() {
+
+            DisabledFields("formRegister");
+            ClearForm("formRegister");
+            $("#divLogin").hide();
+            $("#divRegister").show();
+            ShowFields();
+            $("#btnRegister").html('@Html.Raw(GeralResource.RecRes(45))');
+            $("#reg_sub_title").html('@Html.Raw(GeralResource.RecRes(176))');
+            $("#msg_reg_exib").html('@Html.Raw(GeralResource.RecRes(48))');
+        }
+
+        function ShowAlterPass() {
+            $("#divLogin").hide();
+            $("#divAlterPass").show();
+
+        }
+
+        function ShowRecoverPass() {
+            ClearForm("formRecover");
+            $("#divLogin").hide();
+            $("#divRecoverPass").show();
+        }
+
+        function BackToLogin() {
+
+            $("#divLogin").show();
+            $("#divRegister").hide();
+            $("#divAlterPass").hide();
+            $("#divRecoverPass").hide();
+            $("#email_login").focus();
+        }
+
+        $("#formLogin").keypress(function (e) {
+            if (e.which == 13 || e.keyCode == 13) {
+                $("#btnLogin").click();
+            }
+
+        });
+
+        $("#formRegister").keypress(function (e) {
+            if (e.which == 13 || e.keyCode == 13) {
+                $("#btnRegister").click();
+            }
+
+        });
+
+        $("#formRecover").keypress(function (e) {
+            if (e.which == 13 || e.keyCode == 13) {
+                $("#btnRecover").click();
+            }
+
+        });
+
+        function Register() {
+            $("#message").hide();
+            $("#message").html("");
+
+            $.ajax({
+                type: 'POST',
+                url: "/Login/Register",
+                data: $("#formRegister").serialize(),
+                success: function (data) {
+                    if (data.status == "success") {
+                        ModalMsg('@Html.Raw(GeralResource.RecRes(123))', '@Html.Raw(GeralResource.RecRes(481))');
+                    }
+                    else if (data.status == "validation") {
+                        $("#contentform").html(data.view);
+                        $("#message").html(data.message);
+                        $("#message").show();
+                    }
+                    else {
+
+                    }
+                }, beforeSend: function () {
+
+                    $("#btnRegister").prop("disabled", true);
+                    $("#btnRegister").html('@Html.Raw(GeralResource.RecRes(468))');
+
+
+                }, complete: function () {
+
+                    $("#btnRegister").prop("disabled", false);
+                    $("#btnRegister").html('@Html.Raw(GeralResource.RecRes(45))');
+
+                }
+            });
+
+        }
+        // alterar senha
+        function AlterarSenha() {
+            $("#message").hide();
+            $("#message").html("");
+
+            $.ajax({
+                type: 'POST',
+                url: "/Home/AlterarSenha",
+                data: $("#FormAlter").serialize(),
+                success: function (data) {
+                    if (data.status == "success") {
+                        ModalMsg('@Html.Raw(GeralResource.RecRes(123))', '@Html.Raw(GeralResource.RecRes(481))');
+                    }
+                    else if (data.status == "validation") {
+
+                        $("#alterform").html(data.view);
+                        $("#message").html(data.message);
+                        $("#message").show();
+
+                    }
+                    else {
+
+                    }
+                }, beforeSend: function () {
+
+                    $("#btnAlter").prop("disabled", true);
+                    $("#btnAlter").html('@Html.Raw(GeralResource.RecRes(468))');
+
+
+                }, complete: function () {
+
+                    $("#btnAlter").prop("disabled", false);
+                    $("#btnAlter").html('@Html.Raw(GeralResource.RecRes(468))');
+
+                }
+            });
+
+        }
+
+        function recoverPass() {
+
+            $("#message").hide();
+            $("#message").html("");
+            var email = $.trim($("#txt_email_recover").val());
+            if (email == "") {
+                $("#mensagemRec").html('Campo Obrigatório');
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: "/Login/recoverPass",
+                data: { user_email: email },
+                success: function (data) {
+                    if (data.status == "success") {
+                        ModalMsg('@Html.Raw(GeralResource.RecRes(123))', '@Html.Raw(GeralResource.RecRes(482))');
+                        $("#messageRec").html(data.message);
+                    }
+                    else if (data.status == "validation") {
+                        $("#contentform").html(data.view);
+                    }
+                    else {
+                        ModalMsg('@Html.Raw(GeralResource.RecRes(00))', data.message);
+                    }
+                }, beforeSend: function () {
+                    $("#btnRecover").html('@Html.Raw(GeralResource.RecRes(468))');
+                    $("#btnRecover").prop("disabled", true);
+
+                }, complete: function () {
+                    $("#btnRecover").prop("disabled", false);
+                    $("#btnRecover").html('@Html.Raw(GeralResource.RecRes(47))');
+
+                }
+            });
+        }
+
+        function ClearFieldsLogin() {
+
+            $("#lblmsg").hide();
+            $("#lblmsg").html('');
+            $("#reg_sub_title").html('');
+            $("#msg_reg_exib").html('');
+
+        }
+
+        function Login() {
+
+            ClearFieldsLogin();
+
+            var email = $.trim($("#email_login").val());
+            var senha = $.trim($("#senha_login").val());
+
+            if (email == "" || senha == "") {
+                $("#lblmsg").html('Campos obrigatórios');
+                $("#lblmsg").show();
+                return false;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: "/Login/Logar",
+                data: $("#formLogin").serialize(),
+                success: function (data) {
+                    if (data.status == "success") {
+                        localStorage.setItem("id_link_menu", "");
+                        location.href = "/Home/Index";
+                    }
+                    else if (data.status == "validation") {
+                        $("#lblmsg").html(data.msg);
+                        $("#lblmsg").show();
+                        OriginalBtnLogin();
+                    }
+                    else if (data.status == "license_expired") {
+                        ShowExpireLicense(data.view);
+                    }
+                    else if (data.status == "temp_password") {
+                        $("#alterform").html(data.view);
+                        $("#alterform").show();
+                        ShowAlterPass();
+                        OriginalBtnLogin();
+
+                    }
+                    else {
+                        $("#lblmsg").html(data.msg);
+                        $("#lblmsg").show();
+                        OriginalBtnLogin();
+                    }
+
+                }, beforeSend: function () {
+
+                    $("#btnLogin").html('@Html.Raw(GeralResource.RecRes(468))');
+                    $("#btnLogin").prop("disabled", true);
+
+                }, complete: function () {
+
+                }
+            });
+        }
+
+        function ShowExpireLicense(view) {
+            $("#reg_sub_title").html("@Html.Raw(GeralResource.RecRes(177))");
+            $("#msg_reg_exib").html("@Html.Raw(GeralResource.RecRes(95))");
+            
+            //DisabledFields("formRegister");
+            //ClearForm("formRegister");
+            $("#divLogin").hide();
+            $("#divRegister").show();
+            ShowFields();
+
+            $("#divLogin").hide();
+            $("#divRegister").show();
+            $("#contentform").html(view);
+            BlockedFields("contentform");
+            $("#btnRegister").html('Solicitar Renovação');
+            $("#div_senha").hide();
+            $("#div_conf_senha").hide();
+            $("#div_exib").hide();
+            OriginalBtnLogin();
+        }
+
+        function OriginalBtnLogin() {
+            $("#btnLogin").prop("disabled", false);
+            $("#btnLogin").html('@Html.Raw(GeralResource.RecRes(8))');
+        }
+
+    </script>
+}
+
+
